@@ -25,15 +25,21 @@ motor_inputs get_motors(int motor) {
 	return motor_inputs{M2_IN1, M2_IN2};
 }
 
-void run_forwards(int motor) {
+void run_forwards(int motor, int speed) {
 	motor_inputs mi = get_motors(motor);
+	pinMode(mi.in1, OUTPUT);
+	pinMode(mi.in2, PWM_OUTPUT);
 
 	digitalWrite(mi.in1, LOW);
-	digitalWrite(mi.in2, HIGH);
+	//digitalWrite(mi.in2, HIGH);
+	analogWrite(mi.in2, speed);
 }
 
 void run_back(int motor) {
 	motor_inputs mi = get_motors(motor);
+
+	pinMode(mi.in1, OUTPUT);
+	pinMode(mi.in2, OUTPUT);
 
 	digitalWrite(mi.in2, LOW);
 	digitalWrite(mi.in1, HIGH);
@@ -42,6 +48,9 @@ void run_back(int motor) {
 void stop(int motor) {
 	motor_inputs mi = get_motors(motor);
 
+	pinMode(mi.in1, OUTPUT);
+	pinMode(mi.in2, OUTPUT);
+	
 	digitalWrite(mi.in1, LOW);
 	digitalWrite(mi.in2, LOW);
 }
@@ -66,8 +75,11 @@ int main() {
 		std::cin >> m;
 
 		if(v == "fwd") {
+			int sp;
+			std::cout << "Input Speed (0-255):";
+			std::cin >> sp;
 			std::cout << "running forwards" << std::endl;
-			run_forwards(m);
+			run_forwards(m, sp);
 		}else if(v == "stop") {
 			std::cout << "STOPPING" << std::endl;
 			stop(m);
